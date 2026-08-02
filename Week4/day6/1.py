@@ -2,6 +2,7 @@
 
 from typing import List
 
+
 class Solution:
     def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:
         graph = [[] for _ in range(n)]
