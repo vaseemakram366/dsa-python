@@ -1,39 +1,42 @@
-# 2685. Count the Number of Complete Components
-
 from typing import List
+from collections import deque
 
 
 class Solution:
     def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:
-        graph = [[] for _ in range(n)]
-        for u, v in edges:
-            graph[u].append(v)
-            graph[v].append(u)
+        adj = [[] for _ in range(n)]
 
-        visited = [False] * n
+        for a, b in edges:
+            adj[a].append(b)
+            adj[b].append(a)
 
-        def dfs(node):
-            visited[node] = True
-            vertices = 1
-            degree_sum = len(graph[node])
+        seen = [False] * n
+        complete = 0
 
-            for nei in graph[node]:
-                if not visited[nei]:
-                    v, d = dfs(nei)
-                    vertices += v
-                    degree_sum += d
+        for start in range(n):
+            if seen[start]:
+                continue
 
-            return vertices, degree_sum
+            q = deque([start])
+            seen[start] = True
 
-        ans = 0
+            nodes = []
+            edge_count = 0
 
-        for i in range(n):
-            if not visited[i]:
-                vertices, degree_sum = dfs(i)
-                actual_edges = degree_sum // 2
-                required_edges = vertices * (vertices - 1) // 2
+            while q:
+                cur = q.popleft()
+                nodes.append(cur)
+                edge_count += len(adj[cur])
 
-                if actual_edges == required_edges:
-                    ans += 1
+                for nxt in adj[cur]:
+                    if not seen[nxt]:
+                        seen[nxt] = True
+                        q.append(nxt)
 
-        return ans
+            size = len(nodes)
+            edge_count //= 2
+
+            if edge_count == size * (size - 1) // 2:
+                complete += 1
+
+        return complete
