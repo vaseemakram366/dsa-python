@@ -2,6 +2,7 @@ from typing import List
 from collections import deque
 
 
+
 class Solution:
     def countCompleteComponents(self, n: int, edges: List[List[int]]) -> int:
         adj = [[] for _ in range(n)]
